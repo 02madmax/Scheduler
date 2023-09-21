@@ -48,5 +48,5 @@ For additional questions, contact me:
 
 ## Links
 
-Deployed application: 
+Deployed application: https://02madmax.github.io/Scheduler/
 Github application: https://github.com/02madmax/Scheduler
