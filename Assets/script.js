@@ -7,33 +7,38 @@ const present = document.getElementById("present");
 const future = document.getElementById("future");
 const rows = document.getElementsByClassName("row");
 
+// this function adds functionality to the save button, when clicked it will save the user input to local storage
 $(function () {
+  // Function to add functionality to the save button
   $(".saveBtn").on("click", function () {
     const timeBlock = $(this).closest(".time-block").attr("id");
     const userInput = $(this).siblings("textarea").val();
-
     localStorage.setItem(timeBlock, userInput);
   });
 
   // Get the current hour using Day.js
   const currentHour = dayjs().hour();
 
+  // Loop over each time block and apply classes based on the current hour
   $(".time-block").each(function () {
-    const timeBlock = parseInt($(this).attr("id").split("-")[1]);
-    if (timeBlock < currentHour) {
-      $(this).addClass("past");
-    } else if (timeBlock === currentHour) {
-      $(this).addClass("present");
-    } else {
-      $(this).addClass("future");
-    }
-  });
+    const timeBlock = $(this);
+    const timeBlockID = timeBlock.attr("id");
+    const hour = parseInt(timeBlockID.split("-")[1]);
 
-  $(".time-block").each(function () {
-    const timeBlock = $(this).attr("id");
-    const userInput = localStorage.getItem(timeBlock);
+    // Determine if the time block is in the past, present, or future
+    // and apply the appropriate class
+    if (hour < currentHour) {
+      timeBlock.removeClass("present future").addClass("past");
+    } else if (hour === currentHour) {
+      timeBlock.removeClass("past future").addClass("present");
+    } else {
+      timeBlock.removeClass("past present").addClass("future");
+    }
+
+    // Retrieve and set user input from local storage
+    const userInput = localStorage.getItem(timeBlockID);
     if (userInput) {
-      $(this).find("textarea").val(userInput);
+      timeBlock.find("textarea").val(userInput);
     }
   });
 
@@ -42,25 +47,7 @@ $(function () {
   $("#currentDay").text(currentDay);
 });
 
-  $(document).ready(function () {
-    const TimeBlocks = $(".time-block");
-    const savedEvents = JSON.parse(localStorage.getItem("savedEvents")) || [];
-    timeBlocks.each(function () {
-      const timeBlock = $(this);
-      const hour = parseInt(timeBlock.attr("id").split("-")[1]);
-      const eventInput = timeBlock.find("textarea");
 
-      eventInput.val(savedEvents[hour]);
-
-      timeBlock.find(".saveBtn").on("click", function (event) {
-        event.preventDefault();
-        const eventText = eventInput.val();
-        savedEvents[hour] = eventText;
-        localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
-      });
-    });
-  });
-  
 
 
 
